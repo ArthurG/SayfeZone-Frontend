@@ -37,6 +37,24 @@ let fakeData =
     }
   ]
 
+let allVideos = [];
+let filteredVideos = [];
+
+function clickGraph(data){
+  debugger;
+  console.log(data.value);
+  console.log(data.name);
+  filteredVideos = [];
+
+  for (var i = max(0, data.index); i < min(allVideos.length);i++){
+    filteredVideos.push(allVideos[i]);
+  }
+
+  deleteAllVideos();
+  addAllVideos(filteredVideos);
+
+}
+
 // Funcition to test newVideo. Do not call
 function copyVideo() {
   newVideo("I really like cake... and pie", 12, "Nov 24, 2018 9:55AM");
@@ -62,14 +80,10 @@ function getAllVideos(){
   $.get({
     url: "https://searchandprotech.lib.id/sayfezonefilter@dev/",
     success: function(item){
-      for (var video of item){
-        let text = "";
-        for (var resultObj of video.result){
-          text+= resultObj.text.content;
-          text+=" "
-        }
-        newVideo(text, video.sentiment, video.timestamp, video.video_link);
-      }
+      allVideos = item;
+      // Actually get the videos
+
+      addVideos(allVideos);
 
       // Show all the items 
       let data1 = ["sentiment"]
@@ -96,8 +110,35 @@ function getAllVideos(){
         },
       });
 
+      var chart = c3.generate({
+        bindto: '#chart',
+        data: {
+          columns: [
+            data1
+          ],
+          onclick: clickGraph
+        },
+        axis: {
+          x: {
+            type: 'category',
+            x_labels
+          }
+        },
+      });
     }
   });
+}
+
+// Add all videos to dom
+function addVideos(videos){
+  for (var video of allVideos){
+    let text = "";
+    for (var resultObj of video.result){
+      text+= resultObj.text.content;
+      text+=" "
+    }
+    newVideo(text, video.sentiment, video.timestamp, video.video_link);
+  }
 }
 
 // Adds video to dom
