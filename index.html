@@ -15,6 +15,9 @@
     <!-- Custom styles sheet -->
     <link href="css/script.css" rel="stylesheet" type="text/css" >
 
+    <!-- C3 -->
+    <link href="css/c3.css" media="screen" rel="stylesheet" type="text/css" />
+
     <!-- Custom styles for this template, not used atm-->
     <link href="album.css" rel="stylesheet" type="text/css" >
 
@@ -58,12 +61,8 @@
 
     <section class="jumbotron text-center">
       <div class="container">
-        <h1 class="jumbotron-heading">Album example</h1>
-        <p class="lead text-muted">Something short and leading about the collection below—its contents, the creator, etc. Make it short and sweet, but not too short so folks don't simply skip over it entirely.</p>
-        <p>
-        <a href="#" class="btn btn-primary my-2">Main call to action</a>
-        <a href="#" class="btn btn-secondary my-2">Secondary action</a>
-        </p>
+        <h1 class="jumbotron-heading">Sentiment over time</h1>
+        <div id="chart"></div>
       </div>
     </section>
 
@@ -96,16 +95,6 @@
 
     </main>
 
-    <footer class="text-muted">
-      <div class="container">
-        <p class="float-right">
-        <a href="#">Back to top</a>
-        </p>
-        <p>Album example is &copy; Bootstrap, but please download and customize it for yourself!</p>
-        <p>New to Bootstrap? <a href="../../">Visit the homepage</a> or read our <a href="../../getting-started/">getting started guide</a>.</p>
-      </div>
-    </footer>
-
     <!-- Bootstrap core JavaScript
       ================================================== -->
       <!-- Placed at the end of the document so the pages load faster -->
@@ -118,7 +107,12 @@
       <script src="https://www.gstatic.com/firebasejs/5.5.9/firebase.js"></script>
       <script src="https://www.gstatic.com/firebasejs/5.5.9/firebase-app.js"></script>
       <script src="https://www.gstatic.com/firebasejs/5.5.9/firebase-database.js"></script>
+
+      <script src="js/d3v5.js" charset="utf-8"></script>
+      <script src="js/c3.js"></script>
+
       <script src="js/script.js"></script>
+
   </body>
 
 </html>
