@@ -1,0 +1,11 @@
+#sample-video{
+  display: none;
+}
+
+.sentiment-pos{
+  background-color: blue;
+}
+
+.sentiment-neg{
+  background-color: red;
+}
