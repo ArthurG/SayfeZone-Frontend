@@ -70,11 +70,11 @@ function filterNegSentiments(videos){
 
 // Hits an endpoint to get all the video data. Then, populates the video onto the DOM. 
 // Also updates the graph to include the videos
-function getAllVideos(){
+function populateAllVideos(){
   $.get({
     url: "https://searchandprotech.lib.id/sayfezonefilter@dev/",
     success: function(item){
-      allVideos = item;
+      allVideos = filterNegSentiments(item);
       // Actually get the videos
 
       addVideos(allVideos);
@@ -137,3 +137,7 @@ function newVideo(text, sentiment, timestamp, link) {
   newVideo.find(".speech2text").text(text)
   newVideo.find(".vid-link").attr("src", link)
 }
+
+
+// Start from here
+populateAllVideos();
