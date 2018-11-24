@@ -41,17 +41,16 @@ let allVideos = [];
 let filteredVideos = [];
 
 function clickGraph(data){
-  debugger;
   console.log(data.value);
   console.log(data.name);
   filteredVideos = [];
 
-  for (var i = max(0, data.index); i < min(allVideos.length);i++){
+  for (var i = Math.max(0, data.index - 1); i < Math.min(allVideos.length, data.index + 2);i++){
     filteredVideos.push(allVideos[i]);
   }
 
   deleteAllVideos();
-  addAllVideos(filteredVideos);
+  addVideos(filteredVideos);
 
 }
 
@@ -63,11 +62,6 @@ function copyVideo() {
 // Deletes all the videos in the row
 function deleteAllVideos(){
   $("#addVideos").children().empty();
-}
-
-function onClickItem(data){
-  console.log(data.value);
-  console.log(data.name);
 }
 
 function filterNegSentiments(videos){
@@ -85,7 +79,7 @@ function getAllVideos(){
 
       addVideos(allVideos);
 
-      // Show all the items 
+      // Show all the items  on the graph
       let data1 = ["sentiment"]
       let x_labels = []
       for (var video of item){
@@ -100,28 +94,12 @@ function getAllVideos(){
           columns: [
             data1
           ],
-          onclick: onClickItem
-        },
-        axis: {
-          x: {
-            type: 'category',
-            x_labels
-          }
-        },
-      });
-
-      var chart = c3.generate({
-        bindto: '#chart',
-        data: {
-          columns: [
-            data1
-          ],
           onclick: clickGraph
         },
         axis: {
           x: {
             type: 'category',
-            x_labels
+            categories: x_labels
           }
         },
       });
@@ -131,7 +109,7 @@ function getAllVideos(){
 
 // Add all videos to dom
 function addVideos(videos){
-  for (var video of allVideos){
+  for (var video of videos){
     let text = "";
     for (var resultObj of video.result){
       text+= resultObj.text.content;
@@ -154,7 +132,7 @@ function newVideo(text, sentiment, timestamp, link) {
     newVideo.find(".sentiment-neg").text(sentiment)
     newVideo.find(".sentiment-pos").hide()
   }
-  let d = new Date(timestamp);
+  let d = new Date(timestamp * 1000);
   newVideo.find(".timestamp").text(d.toUTCString())
   newVideo.find(".speech2text").text(text)
   newVideo.find(".vid-link").attr("src", link)
