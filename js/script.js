@@ -47,44 +47,56 @@ function deleteAllVideos(){
   $("#addVideos").children().empty();
 }
 
+function onClickItem(data){
+  console.log(data.value);
+  console.log(data.name);
+}
+
+function filterNegSentiments(videos){
+  return videos.filter(vid => vid.sentiment < -0.25);
+}
+
 // Hits an endpoint to get all the video data. Then, populates the video onto the DOM. 
 // Also updates the graph to include the videos
 function getAllVideos(){
-  for (var video of fakeData){
-    let text = "";
-    for (var resultObj of video.result){
-      text+= resultObj.text.content;
-      text+=" "
-    }
-    newVideo(text, video.sentiment, video.timestamp, video.video_link);
-  }
-
-  let data1 = ["sentiment"]
-  let x_labels = []
-  for (var video of fakeData){
-    data1.push(video.sentiment);
-    let d = new Date(video.timestamp);
-    x_labels.push(d.toUTCString());
-  }
-
-
-  var chart = c3.generate({
-    bindto: '#chart',
-    data: {
-      columns: [
-        data1
-      ],
-      onclick: function (data) { 
-        console.log(data.value);
-        console.log(data.name);
-      },
-    },
-    axis: {
-      x: {
-        type: 'category',
-        x_labels
+  $.get({
+    url: "https://searchandprotech.lib.id/sayfezonefilter@dev/",
+    success: function(item){
+      for (var video of item){
+        let text = "";
+        for (var resultObj of video.result){
+          text+= resultObj.text.content;
+          text+=" "
+        }
+        newVideo(text, video.sentiment, video.timestamp, video.video_link);
       }
-    },
+
+      // Show all the items 
+      let data1 = ["sentiment"]
+      let x_labels = []
+      for (var video of item){
+        data1.push(video.sentiment);
+        let d = new Date(video.timestamp * 1000);
+        x_labels.push(d.toUTCString());
+      }
+
+      var chart = c3.generate({
+        bindto: '#chart',
+        data: {
+          columns: [
+            data1
+          ],
+          onclick: onClickItem
+        },
+        axis: {
+          x: {
+            type: 'category',
+            x_labels
+          }
+        },
+      });
+
+    }
   });
 }
 
@@ -104,4 +116,5 @@ function newVideo(text, sentiment, timestamp, link) {
   let d = new Date(timestamp);
   newVideo.find(".timestamp").text(d.toUTCString())
   newVideo.find(".speech2text").text(text)
+  newVideo.find(".vid-link").attr("src", link)
 }
