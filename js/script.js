@@ -37,6 +37,24 @@ let fakeData =
     }
   ]
 
+let allVideos = [];
+let filteredVideos = [];
+
+function clickGraph(data){
+  debugger;
+  console.log(data.value);
+  console.log(data.name);
+  filteredVideos = [];
+
+  for (var i = max(0, data.index), i < min(allVideos.length);i++){
+    filteredVideos.push(allVideos[i]);
+  }
+
+  deleteAllVideos();
+  addAllVideos(filteredVideos);
+
+}
+
 // Funcition to test newVideo. Do not call
 function copyVideo() {
   newVideo("I really like cake... and pie", 12, "Nov 24, 2018 9:55AM");
@@ -50,14 +68,11 @@ function deleteAllVideos(){
 // Hits an endpoint to get all the video data. Then, populates the video onto the DOM. 
 // Also updates the graph to include the videos
 function getAllVideos(){
-  for (var video of fakeData){
-    let text = "";
-    for (var resultObj of video.result){
-      text+= resultObj.text.content;
-      text+=" "
-    }
-    newVideo(text, video.sentiment, video.timestamp, video.video_link);
-  }
+  allVideos = fakeData;
+  // Actually get the videos
+
+  addVideos(allVideos);
+
 
   let data1 = ["sentiment"]
   let x_labels = []
@@ -74,10 +89,7 @@ function getAllVideos(){
       columns: [
         data1
       ],
-      onclick: function (data) { 
-        console.log(data.value);
-        console.log(data.name);
-      },
+      onclick: clickGraph
     },
     axis: {
       x: {
@@ -86,6 +98,18 @@ function getAllVideos(){
       }
     },
   });
+}
+
+// Add all videos to dom
+function addVideos(videos){
+  for (var video of allVideos){
+    let text = "";
+    for (var resultObj of video.result){
+      text+= resultObj.text.content;
+      text+=" "
+    }
+    newVideo(text, video.sentiment, video.timestamp, video.video_link);
+  }
 }
 
 // Adds video to dom
