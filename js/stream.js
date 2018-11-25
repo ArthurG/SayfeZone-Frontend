@@ -1,4 +1,4 @@
-let lastTime = 0;
+let lastTime = 1543124619;
 let selectedVid = "";
 let newVideo;
 let oldVideo = $("#stream");
@@ -7,7 +7,7 @@ let useAlt = true; //True = use old
   function startStream(){
     //Set up the references to the doms
     // newVideo = oldVideo.clone();
-    // $("#addVideos").prepend(newVideo);
+    // $("#addVideos").prepend(newVideo);=-{[[=-]'p:]}
 
     parseAllVideos(setupVideo);
   }
@@ -15,7 +15,6 @@ let useAlt = true; //True = use old
   function setupVideo(){
     updateDom();
     useAlt = !useAlt;
-    // setTimeout(startStream, 10000);
   }
 
   function updateDom(){
