@@ -17,26 +17,6 @@ db.ref('users/eeB7lr84oHfqMntRDTZ0').set({
 });
 */
 
-let fakeData = 
-  [
-    {
-      id:123,
-      timestamp:1543064163,
-      sentiment:-0.5,
-      magnitutde:0.5,
-      result: [ {    "text": {     "content": "This guy is a stupid ass butt."    },    "sentiment": {     "magnitude": 0.5,     "score": -0.5    }   },   {    "text": {     "content": "I wish he would die already."    },    "sentiment": {     "magnitude": 0.1,     "score": 0.1    }   },   {    "text": {     "content": "You're so dumb you dork."    },    "sentiment": {     "magnitude": 0.7,     "score": -0.7    }   },   {    "text": {     "content": "What is wrong with you?"    },    "sentiment": {     "magnitude": 0.6,     "score": -0.6    }   },   {    "text": {     "content": "Idiot."    },    "sentiment": {     "magnitude": 0.8,     "score": -0.8    }   }  ],
-      video_link:"https://firebasestorage.googleapis.com/v0/b/sayfezone.appspot.com/o/WIN_20181124_04_16_43_Pro.mp4?alt=media&token=9fc66ef0-9742-4e10-aa47-55d5e0fc17f8"
-    },
-    {
-      id:123,
-      timestamp:1543064163,
-      sentiment:0.5,
-      magnitutde:0.5,
-      result: [ {    "text": {     "content": "This guy is a stupid ass butt."    },    "sentiment": {     "magnitude": 0.5,     "score": -0.5    }   },   {    "text": {     "content": "I wish he would die already."    },    "sentiment": {     "magnitude": 0.1,     "score": 0.1    }   },   {    "text": {     "content": "You're so dumb you dork."    },    "sentiment": {     "magnitude": 0.7,     "score": -0.7    }   },   {    "text": {     "content": "What is wrong with you?"    },    "sentiment": {     "magnitude": 0.6,     "score": -0.6    }   },   {    "text": {     "content": "Idiot."    },    "sentiment": {     "magnitude": 0.8,     "score": -0.8    }   }  ],
-      video_link:"https://firebasestorage.googleapis.com/v0/b/sayfezone.appspot.com/o/WIN_20181124_04_16_43_Pro.mp4?alt=media&token=9fc66ef0-9742-4e10-aa47-55d5e0fc17f8"
-    }
-  ]
-
 let allVideos = [];
 let filteredVideos = [];
 
@@ -74,15 +54,17 @@ function populateAllVideos(){
   $.get({
     url: "https://searchandprotech.lib.id/sayfezonefilter@dev/",
     success: function(item){
-      allVideos = filterNegSentiments(item);
+      allVideos = item;
+      
+      filteredVids = filterNegSentiments(item);
       // Actually get the videos
 
-      addVideos(allVideos);
+      addVideos(filteredVids);
 
       // Show all the items  on the graph
       let data1 = ["sentiment"]
       let x_labels = []
-      for (var video of item){
+      for (var video of allVideos){
         data1.push(video.sentiment);
         let d = new Date(video.timestamp * 1000);
         x_labels.push(d.toUTCString());
