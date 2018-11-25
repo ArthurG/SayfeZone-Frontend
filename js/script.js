@@ -47,14 +47,15 @@ function populateAllVideos(){
         return x;
       });
       allVidsWithDates.sort(function(x, y){
-        return x.timestamp - y.timestamp;
+        return y.timestamp - x.timestamp;
       });
       allVideos = allVidsWithDates;
 
-      filteredVids = filterNegSentiments(item);
+      filteredVids = filterNegSentiments(allVideos);
 
       // Actually get the videos
 
+      deleteAllVideos();
       addVideos(filteredVids);
 
       // Show all the items  on the graph
@@ -87,11 +88,11 @@ function populateAllVideos(){
           x: {
             type: 'category',
             categories: x_labels,
-            label: 'X Label'
+            label: 'Date'
 
           },
           y: {
-            label: 'Y Label'
+            label: 'Sentiment Value'
 
           }
         },
