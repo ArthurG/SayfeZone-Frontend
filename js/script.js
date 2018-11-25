@@ -109,10 +109,6 @@ function populateAllVideos(){
 
       var chart = c3.generate({
         bindto: '#chart',
-        size: {
-          height: 100,
-          width: 500,
-        },
         data: {
           columns: [
             data1
@@ -124,13 +120,16 @@ function populateAllVideos(){
             type: 'category',
             categories: x_labels,
             show: false
+          },
+          y: {
+            show:false
           }
         },
         legend: {
           show: false
         }
-      });
-    }
+      })
+      }
   });
 }
 
