@@ -82,9 +82,14 @@ function populateAllVideos(){
         return x;
       });
       allVidsWithDates.sort(sortFunction);
+
+      if(allVidsWithDates.length == allVideos.length){
+        console.log("No page refresh needed");
+        return;
+      }
       allVideos = allVidsWithDates;
 
-      filteredVids = filterNegSentiments(allVideos);
+      let filteredVids = filterNegSentiments(allVideos);
 
       // Actually get the videos
 
