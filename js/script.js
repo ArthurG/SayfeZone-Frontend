@@ -1,6 +1,5 @@
 let allVideos = [];
 let filteredVideos = [];
-let videoMapping = {};
 
 let sortFunction = null;
 
@@ -43,7 +42,7 @@ function clickGraph(data){
   clearInterval(refreshTimer);
   filteredVideos = [];
 
-  for (var i = data.index; i < Math.min(allVideos.length, videoMapping[data.index]);i++){
+  for (var i = Math.max(data.index-2,0); i < Math.min(allVideos.length, data.index+2);i++){
     filteredVideos.push(allVideos[i]);
   }
 
@@ -62,7 +61,7 @@ function deleteAllVideos(){
 }
 
 function filterNegSentiments(videos){
-  return videos.filter(vid => vid.sentimentData.documentSentiment.score < 0.5);
+  return videos.filter(vid => vid.sentimentData.documentSentiment.score < -0.1);
 }
 
 // Hits an endpoint to get all the video data. Then, populates the video onto the DOM. 
@@ -93,16 +92,9 @@ function populateAllVideos(){
       let data1 = []
       let x_labels = []
       videoMapping = {}
-      for(let i = 0;i<allVideos.length;i+=Math.max(1, Math.ceil(allVideos.length / 15))){
-        let next = Math.min(allVideos.length, i + Math.max(1, Math.ceil(allVideos.length / 15)));
+      for(let i = 0;i<allVideos.length;i++){
         let video = allVideos[i];
-
-
-        let subArray = allVideos.slice(i, next).map(vid => vid.sentimentData.documentSentiment.score)
-        let averageScore = subArray.reduce((a, b) => a+b, 0) / (next - i)
-        data1.push(averageScore);
-
-        videoMapping[i] = next;
+        data1.push( video.sentimentData.documentSentiment.score );
 
         x_labels.push(video.date.toLocaleString("en-US"));
       }
