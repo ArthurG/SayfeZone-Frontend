@@ -35,6 +35,7 @@ function sortOldest(){
 var refreshTimer = window.setInterval(populateAllVideos, 15000 );
 
 function resetRefreshTimer(){
+  console.log("Adding another refresh timer");
   refreshTimer = window.setInterval(populateAllVideos, 15000 );
 }
 
@@ -61,7 +62,7 @@ function deleteAllVideos(){
 }
 
 function filterNegSentiments(videos){
-  return videos.filter(vid => vid.sentimentData.documentSentiment.score < -0.1);
+  return videos.filter(vid => vid.minSent < -0.1);
 }
 
 // Hits an endpoint to get all the video data. Then, populates the video onto the DOM. 
@@ -76,6 +77,8 @@ function populateAllVideos(){
 
       allVidsWithDates = item.map(function (x){
         x.date = new Date(x.timestamp);
+        x.minSent = Math.min(x.sentimentData.documentSentiment.score,
+          Math.min.apply(null, x.sentimentData.sentences.map(sentence => sentence.sentiment.score)));
         return x;
       });
       allVidsWithDates.sort(sortFunction);
@@ -94,7 +97,7 @@ function populateAllVideos(){
       videoMapping = {}
       for(let i = 0;i<allVideos.length;i++){
         let video = allVideos[i];
-        data1.push( video.sentimentData.documentSentiment.score );
+        data1.push( video.minSent );
 
         x_labels.push(video.date.toLocaleString("en-US"));
       }
@@ -136,7 +139,7 @@ function addVideos(videos){
         text+=" "
       }
     }
-    newVideo(text, video.sentimentData.documentSentiment.score, video.date, video.video_link);
+    newVideo(text, video.minSent, video.date, video.video_link);
   }
 }
 
@@ -158,6 +161,7 @@ function newVideo(text, sentiment, timestamp, link) {
   newVideo.find(".vid-link").attr("src", link)
   let vid = newVideo.find(".video");
   vid[0].onplay = function(){
+    console.log("Clearning");
     clearInterval(refreshTimer);
   }
 }
