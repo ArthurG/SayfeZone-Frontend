@@ -1,4 +1,4 @@
-let lastTime = Math.round((new Date()).getTime() / 1000) - 1000;
+let lastTime = 0;
 let selectedVid = "";
 let newVideo;
 let oldVideo = $("#stream");
@@ -78,7 +78,7 @@ let useAlt = true; //True = use old
         for (var video of allVideos){
             //Check if this is the one we actually want to display
             var thisTime = video.timestamp;
-            if ( thisTime > lastTime){
+            if ( thisTime > lastTime || lastTime == 0){
                 selectedVid = video;
                 // console.log(video);
                 break;
