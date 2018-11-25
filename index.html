@@ -7,8 +7,9 @@
     <meta name="author" content="">
     <link rel="icon" href="../../../../favicon.ico">
 
-    <title>Album example for Bootstrap</title>
-
+    <title>SayfeZone</title>
+    <!-- Fonts! -->
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,900" rel="stylesheet">
     <!-- Bootstrap core CSS -->
     <link href="https://getbootstrap.com/docs/4.1/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -28,42 +29,56 @@
 
     <body>
 
-      <header>
-        <div class="collapse bg-dark" id="navbarHeader">
-          <div class="container">
-            <div class="row">
-              <div class="col-sm-8 col-md-7 py-4">
-                <h4 class="text-white">About</h4>
+      <header class="sticky-top">
+       
+            <!-- <div class="row"> -->
+              <!-- <div class="col-sm-8 col-md-7 py-4"> -->
+                  <!-- <section class="text-center">
+                        <h3>Sentiment over time</h3>
+                        <div id="chart"></div>
+                    </section> -->
+              <!-- </div> -->
+              <!-- <div class="col-sm-8 col-md-7 py-4">
+                <h4 class="text-black">About</h4>
                 <p class="text-muted">Add some information about the album below, the author, or any other background context. Make it a few sentences long so folks can pick up some informative tidbits. Then, link them off to some social networking sites or contact information.</p>
-              </div>
-              <div class="col-sm-4 offset-md-1 py-4">
+              </div> -->
+              <!-- <div class="col-sm-4 offset-md-1 py-4">
                 <h4 class="text-white">Contact</h4>
                 <ul class="list-unstyled">
                   <li><a href="#" class="text-white">Follow on Twitter</a></li>
                   <li><a href="#" class="text-white">Like on Facebook</a></li>
                   <li><a href="#" class="text-white">Email me</a></li>
                 </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="navbar navbar-dark bg-dark shadow-sm">
+              </div> -->
+            <!-- </div> -->
+            
+        <div class="navbar navbar-light bg-light shadow-sm">
           <div class="container d-flex justify-content-between">
             <a onclick = "resetRefreshTimer()" href="#" class="navbar-brand d-flex align-items-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
-              <strong>Album</strong>
+              <strong>SayfeZone</strong>
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
             </button>
           </div>
+          <div class="collapse bg-light" id="navbarHeader">
+              <div class="container">
+    
+                  <section class="text-center">
+                      <div id="chart"></div>
+                  </section>
+          </div>
+        </div>
         </div>
       </header>
 
       <main role="main">
-
       <button onclick="sortSentiment()" type="button" class="btn btn-sm btn-outline-secondary">Increasing Sentiment</button>
       <button  onclick="sortNewest()" type="button" class="btn btn-sm btn-outline-secondary">Decreasing Time</button>
+      <span>Pending Items: </span> <span class="pending_items"></span>
+
+
       <section class="jumbotron text-center">
         <div class="container">
           <h1 class="jumbotron-heading">Sentiment over time</h1>
@@ -81,14 +96,14 @@
               </video>
 
               <div class="card-body">
-                <p class="card-text speech2text">This is what they said text</p>
                 <div class="d-flex justify-content-between align-items-center">
-                  <div class="btn-group">
-                    <button type="button" class="btn btn-sm btn-outline-secondary sentiment-pos">Sentiment Value Here</button>
-                    <button type="button" class="btn btn-sm btn-outline-secondary sentiment-neg">Sentiment Value Here</button>
-                  </div>
+                  <!-- <div class="btn-group"> -->
+                    <div class="sentiment-pos">Sentiment Value Here</div>
+                    <div class="sentiment-neg">Sentiment Value Here</div>
+                  <!-- </div> -->
                   <small class="text-muted timestamp">Timestamp data here</small>
                 </div>
+                <p class="card-text speech2text">This is what they said text</p>
               </div>
             </div>
           </div>

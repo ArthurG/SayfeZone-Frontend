@@ -1,0 +1,23 @@
+body {
+    font-family: 'Lato', sans-serif
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 900;
+}
+
+.sentiment-pos {
+    font-size: 16;
+    font-weight: 900;
+    color: #1976d2;
+}
+.sentiment-neg {
+    font-size: 16;
+    font-weight: 900;
+    color: #d32f2f;
+}
+
+#chart {
+    margin: 0 auto;
+    font-family: 'Lato', sans-serif
+}
