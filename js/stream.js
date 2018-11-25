@@ -1,4 +1,4 @@
-let lastTime = 1543114675945;
+let lastTime = 1543114675945000;
 let selectedVid = "";
 let newVideo;
 let oldVideo = $("#stream");
