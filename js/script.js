@@ -1,57 +1,17 @@
-// Initialize Firebase
-var config = {
-  apiKey: "AIzaSyAynveG0RqBl3XvqPJ9YwmUF64372yqspU",
-  authDomain: "sayfezone.firebaseapp.com",
-  databaseURL: "https://sayfezone.firebaseio.com",
-  projectId: "sayfezone",
-  storageBucket: "sayfezone.appspot.com",
-  messagingSenderId: "545310444914"
-};
-firebase.initializeApp(config);
-
-/*
-let db = firebase.database();
-
-db.ref('users/eeB7lr84oHfqMntRDTZ0').set({
-  name: "arthur",
-});
-*/
-
-let fakeData = 
-  [
-    {
-      id:123,
-      timestamp:1543064163,
-      sentiment:-0.5,
-      magnitutde:0.5,
-      result: [ {    "text": {     "content": "This guy is a stupid ass butt."    },    "sentiment": {     "magnitude": 0.5,     "score": -0.5    }   },   {    "text": {     "content": "I wish he would die already."    },    "sentiment": {     "magnitude": 0.1,     "score": 0.1    }   },   {    "text": {     "content": "You're so dumb you dork."    },    "sentiment": {     "magnitude": 0.7,     "score": -0.7    }   },   {    "text": {     "content": "What is wrong with you?"    },    "sentiment": {     "magnitude": 0.6,     "score": -0.6    }   },   {    "text": {     "content": "Idiot."    },    "sentiment": {     "magnitude": 0.8,     "score": -0.8    }   }  ],
-      video_link:"https://firebasestorage.googleapis.com/v0/b/sayfezone.appspot.com/o/WIN_20181124_04_16_43_Pro.mp4?alt=media&token=9fc66ef0-9742-4e10-aa47-55d5e0fc17f8"
-    },
-    {
-      id:123,
-      timestamp:1543064163,
-      sentiment:0.5,
-      magnitutde:0.5,
-      result: [ {    "text": {     "content": "This guy is a stupid ass butt."    },    "sentiment": {     "magnitude": 0.5,     "score": -0.5    }   },   {    "text": {     "content": "I wish he would die already."    },    "sentiment": {     "magnitude": 0.1,     "score": 0.1    }   },   {    "text": {     "content": "You're so dumb you dork."    },    "sentiment": {     "magnitude": 0.7,     "score": -0.7    }   },   {    "text": {     "content": "What is wrong with you?"    },    "sentiment": {     "magnitude": 0.6,     "score": -0.6    }   },   {    "text": {     "content": "Idiot."    },    "sentiment": {     "magnitude": 0.8,     "score": -0.8    }   }  ],
-      video_link:"https://firebasestorage.googleapis.com/v0/b/sayfezone.appspot.com/o/WIN_20181124_04_16_43_Pro.mp4?alt=media&token=9fc66ef0-9742-4e10-aa47-55d5e0fc17f8"
-    }
-  ]
-
 let allVideos = [];
 let filteredVideos = [];
 
 function clickGraph(data){
-  debugger;
   console.log(data.value);
   console.log(data.name);
   filteredVideos = [];
 
-  for (var i = max(0, data.index); i < min(allVideos.length);i++){
+  for (var i = Math.max(0, data.index - 1); i < Math.min(allVideos.length, data.index + 2);i++){
     filteredVideos.push(allVideos[i]);
   }
 
   deleteAllVideos();
-  addAllVideos(filteredVideos);
+  addVideos(filteredVideos);
 
 }
 
@@ -65,50 +25,41 @@ function deleteAllVideos(){
   $("#addVideos").children().empty();
 }
 
-function onClickItem(data){
-  console.log(data.value);
-  console.log(data.name);
-}
-
 function filterNegSentiments(videos){
-  return videos.filter(vid => vid.sentiment < -0.25);
+  return videos.filter(vid => vid.sentimentData.documentSentiment.score < 1);
 }
 
 // Hits an endpoint to get all the video data. Then, populates the video onto the DOM. 
 // Also updates the graph to include the videos
-function getAllVideos(){
+function populateAllVideos(){
   $.get({
     url: "https://searchandprotech.lib.id/sayfezonefilter@dev/",
     success: function(item){
-      allVideos = item;
+      item = item.filter(vid => "sentimentData" in vid);
+      
+      allVidsWithDates = item.map(function (x){
+        x.date = new Date(x.timestamp);
+        return x;
+      });
+      allVidsWithDates.sort(function(x, y){
+        return x.timestamp - y.timestamp;
+      });
+      allVideos = allVidsWithDates;
+
+      filteredVids = filterNegSentiments(item);
+
       // Actually get the videos
 
-      addVideos(allVideos);
+      addVideos(filteredVids);
 
-      // Show all the items 
+      // Show all the items  on the graph
       let data1 = ["sentiment"]
-      let x_labels = []
-      for (var video of item){
-        data1.push(video.sentiment);
-        let d = new Date(video.timestamp * 1000);
-        x_labels.push(d.toUTCString());
+      let x_labels = ["Lavels"]
+      for(let i = 0;i<allVideos.length;i+=Math.max(1, Math.ceil(allVideos.length / 10))){
+        let video = allVideos[i];
+        data1.push(video.sentimentData.documentSentiment.score);
+        x_labels.push(video.date.toLocaleString("en-US"));
       }
-
-      var chart = c3.generate({
-        bindto: '#chart',
-        data: {
-          columns: [
-            data1
-          ],
-          onclick: onClickItem
-        },
-        axis: {
-          x: {
-            type: 'category',
-            x_labels
-          }
-        },
-      });
 
       var chart = c3.generate({
         bindto: '#chart',
@@ -121,7 +72,7 @@ function getAllVideos(){
         axis: {
           x: {
             type: 'category',
-            x_labels
+            categories: x_labels
           }
         },
       });
@@ -131,13 +82,15 @@ function getAllVideos(){
 
 // Add all videos to dom
 function addVideos(videos){
-  for (var video of allVideos){
+  for (var video of videos){
     let text = "";
-    for (var resultObj of video.result){
-      text+= resultObj.text.content;
-      text+=" "
+    if(video != undefined && video.sentimentData != undefined && video.sentimentData.sentences){
+      for (var resultObj of video.sentimentData.sentences){
+        text+= resultObj.text.content;
+        text+=" "
+      }
     }
-    newVideo(text, video.sentiment, video.timestamp, video.video_link);
+    newVideo(text, video.sentimentData.documentSentiment.score, video.date, video.video_link);
   }
 }
 
@@ -154,8 +107,11 @@ function newVideo(text, sentiment, timestamp, link) {
     newVideo.find(".sentiment-neg").text(sentiment)
     newVideo.find(".sentiment-pos").hide()
   }
-  let d = new Date(timestamp);
-  newVideo.find(".timestamp").text(d.toUTCString())
+  newVideo.find(".timestamp").text(timestamp.toUTCString())
   newVideo.find(".speech2text").text(text)
   newVideo.find(".vid-link").attr("src", link)
 }
+
+
+// Start from here
+populateAllVideos();
