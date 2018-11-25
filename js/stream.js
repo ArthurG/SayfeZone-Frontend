@@ -30,8 +30,6 @@ let useAlt = true; //True = use old
     // }
     // target.attr("id","");
 
-    console.log("booop");
-    console.log(selectedVid);
     var sentiment = 0;
     if (selectedVid.sentimentData){
       sentiment = selectedVid.sentimentData.documentSentiment.score;
@@ -54,7 +52,7 @@ let useAlt = true; //True = use old
       newVideo.find(".sentiment-neg").text(sentiment);
       newVideo.find(".sentiment-pos").hide();
     }
-    newVideo.find(".timestamp").text(selectedVid.timestamp);
+    newVideo.find(".timestamp").text(new Date(selectedVid.timestamp).toUTCString());
     newVideo.find(".vid-link").attr("src", selectedVid.video_link);
     newVideo.find(".speech2text").text(text)
     // target.find(".video").play();
