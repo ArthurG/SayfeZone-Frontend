@@ -2,6 +2,37 @@ let allVideos = [];
 let filteredVideos = [];
 let videoMapping = {};
 
+let sortFunction = null;
+
+let decreasingTimeStamp =function(x, y){
+    return y.timestamp - x.timestamp;
+}
+
+let increasingTimeStamp =function(x, y){
+    return x.timestamp - y.timestamp;
+}
+
+let increasingSentiment =function(x, y){
+    return y.sentimentData.documentSentiment.score - x.sentimentData.documentSentiment.score;
+}
+
+function sortNewest(){
+  sortFunction = increasingTimeStamp;
+  populateAllVideos();
+
+}
+
+function sortSentiment(){
+  sortFunction = increasingSentiment;
+  populateAllVideos();
+}
+
+sortFunction = increasingTimeStamp;
+
+function sortOldest(){
+
+}
+
 var refreshTimer = window.setInterval(populateAllVideos, 15000 );
 
 function resetRefreshTimer(){
@@ -46,9 +77,7 @@ function populateAllVideos(){
         x.date = new Date(x.timestamp);
         return x;
       });
-      allVidsWithDates.sort(function(x, y){
-        return y.timestamp - x.timestamp;
-      });
+      allVidsWithDates.sort(sortFunction);
       allVideos = allVidsWithDates;
 
       filteredVids = filterNegSentiments(allVideos);
