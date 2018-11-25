@@ -42,7 +42,7 @@ function clickGraph(data){
   clearInterval(refreshTimer);
   filteredVideos = [];
 
-  for (var i = Math.max(data.index-2,0); i < Math.min(allVideos.length, data.index+2);i++){
+  for (var i = Math.max(data.index-2,0); i < Math.min(allVideos.length, data.index+3);i++){
     filteredVideos.push(allVideos[i]);
   }
 
