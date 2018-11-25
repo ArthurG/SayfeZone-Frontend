@@ -134,6 +134,10 @@ function newVideo(text, sentiment, timestamp, link) {
   newVideo.find(".timestamp").text(timestamp.toUTCString())
   newVideo.find(".speech2text").text(text)
   newVideo.find(".vid-link").attr("src", link)
+  let vid = newVideo.find(".video");
+  vid[0].onplay = function(){
+    clearInterval(refreshTimer);
+  }
 }
 
 
