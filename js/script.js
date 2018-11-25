@@ -1,6 +1,7 @@
 let allVideos = [];
 let filteredVideos = [];
 
+let keepAllVids = false;
 let sortFunction = null;
 
 let decreasingTimeStamp =function(x, y){
@@ -16,6 +17,7 @@ let increasingSentiment =function(x, y){
 }
 
 function sortNewest(){
+  keepAllVids  = true;
   sortFunction = increasingTimeStamp;
   populateAllVideos();
 
@@ -83,13 +85,20 @@ function populateAllVideos(){
       });
       allVidsWithDates.sort(sortFunction);
 
+
+      /*
       if(allVidsWithDates.length == allVideos.length){
         console.log("No page refresh needed");
         return;
       }
+      */
       allVideos = allVidsWithDates;
 
-      let filteredVids = filterNegSentiments(allVideos);
+
+      let filteredVids = allVideos;
+      if (!keepAllVids){
+        filteredVids = filterNegSentiments(allVideos);
+      }
 
       // Actually get the videos
 
