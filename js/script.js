@@ -1,22 +1,3 @@
-// Initialize Firebase
-var config = {
-  apiKey: "AIzaSyAynveG0RqBl3XvqPJ9YwmUF64372yqspU",
-  authDomain: "sayfezone.firebaseapp.com",
-  databaseURL: "https://sayfezone.firebaseio.com",
-  projectId: "sayfezone",
-  storageBucket: "sayfezone.appspot.com",
-  messagingSenderId: "545310444914"
-};
-firebase.initializeApp(config);
-
-/*
-let db = firebase.database();
-
-db.ref('users/eeB7lr84oHfqMntRDTZ0').set({
-  name: "arthur",
-});
-*/
-
 let allVideos = [];
 let filteredVideos = [];
 
@@ -45,7 +26,7 @@ function deleteAllVideos(){
 }
 
 function filterNegSentiments(videos){
-  return videos.filter(vid => vid.sentiment < -0.25);
+  return videos.filter(vid => vid.sentimentData.documentSentiment.score < 1);
 }
 
 // Hits an endpoint to get all the video data. Then, populates the video onto the DOM. 
@@ -54,20 +35,30 @@ function populateAllVideos(){
   $.get({
     url: "https://searchandprotech.lib.id/sayfezonefilter@dev/",
     success: function(item){
-      allVideos = item;
+      item = item.filter(vid => "sentimentData" in vid);
       
+      allVidsWithDates = item.map(function (x){
+        x.date = new Date(x.timestamp);
+        return x;
+      });
+      allVidsWithDates.sort(function(x, y){
+        return x.timestamp - y.timestamp;
+      });
+      allVideos = allVidsWithDates;
+
       filteredVids = filterNegSentiments(item);
+
       // Actually get the videos
 
       addVideos(filteredVids);
 
       // Show all the items  on the graph
       let data1 = ["sentiment"]
-      let x_labels = []
-      for (var video of allVideos){
-        data1.push(video.sentiment);
-        let d = new Date(video.timestamp * 1000);
-        x_labels.push(d.toUTCString());
+      let x_labels = ["Lavels"]
+      for(let i = 0;i<allVideos.length;i+=Math.max(1, Math.ceil(allVideos.length / 10))){
+        let video = allVideos[i];
+        data1.push(video.sentimentData.documentSentiment.score);
+        x_labels.push(video.date.toLocaleString("en-US"));
       }
 
       var chart = c3.generate({
@@ -93,11 +84,13 @@ function populateAllVideos(){
 function addVideos(videos){
   for (var video of videos){
     let text = "";
-    for (var resultObj of video.result){
-      text+= resultObj.text.content;
-      text+=" "
+    if(video != undefined && video.sentimentData != undefined && video.sentimentData.sentences){
+      for (var resultObj of video.sentimentData.sentences){
+        text+= resultObj.text.content;
+        text+=" "
+      }
     }
-    newVideo(text, video.sentiment, video.timestamp, video.video_link);
+    newVideo(text, video.sentimentData.documentSentiment.score, video.date, video.video_link);
   }
 }
 
@@ -114,8 +107,7 @@ function newVideo(text, sentiment, timestamp, link) {
     newVideo.find(".sentiment-neg").text(sentiment)
     newVideo.find(".sentiment-pos").hide()
   }
-  let d = new Date(timestamp * 1000);
-  newVideo.find(".timestamp").text(d.toUTCString())
+  newVideo.find(".timestamp").text(timestamp.toUTCString())
   newVideo.find(".speech2text").text(text)
   newVideo.find(".vid-link").attr("src", link)
 }
