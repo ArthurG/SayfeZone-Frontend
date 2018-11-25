@@ -71,7 +71,9 @@ function populateAllVideos(){
   $.get({
     url: "https://searchandprotech.lib.id/sayfezonefilter@dev/",
     success: function(item){
+      let numPending = item.filter(vid=>vid.state ==="PENDING").length;
       item = item.filter(vid => "sentimentData" in vid);
+      $(".pending_items").text(numPending);
 
       allVidsWithDates = item.map(function (x){
         x.date = new Date(x.timestamp);
