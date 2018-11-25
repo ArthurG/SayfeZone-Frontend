@@ -1,18 +1,17 @@
 let allVideos = [];
 let filteredVideos = [];
+let videoMapping = {};
 
 function clickGraph(data){
-  console.log(data.value);
-  console.log(data.name);
+  debugger;
   filteredVideos = [];
 
-  for (var i = Math.max(0, data.index - 1); i < Math.min(allVideos.length, data.index + 2);i++){
+  for (var i = data.index; i < Math.min(allVideos.length, videoMapping[data.index]);i++){
     filteredVideos.push(allVideos[i]);
   }
 
   deleteAllVideos();
   addVideos(filteredVideos);
-
 }
 
 // Funcition to test newVideo. Do not call
@@ -26,7 +25,7 @@ function deleteAllVideos(){
 }
 
 function filterNegSentiments(videos){
-  return videos.filter(vid => vid.sentimentData.documentSentiment.score < 1);
+  return videos.filter(vid => vid.sentimentData.documentSentiment.score < 0.5);
 }
 
 // Hits an endpoint to get all the video data. Then, populates the video onto the DOM. 
@@ -36,7 +35,7 @@ function populateAllVideos(){
     url: "https://searchandprotech.lib.id/sayfezonefilter@dev/",
     success: function(item){
       item = item.filter(vid => "sentimentData" in vid);
-      
+
       allVidsWithDates = item.map(function (x){
         x.date = new Date(x.timestamp);
         return x;
@@ -53,11 +52,20 @@ function populateAllVideos(){
       addVideos(filteredVids);
 
       // Show all the items  on the graph
-      let data1 = ["sentiment"]
-      let x_labels = ["Lavels"]
-      for(let i = 0;i<allVideos.length;i+=Math.max(1, Math.ceil(allVideos.length / 10))){
+      let data1 = []
+      let x_labels = []
+      videoMapping = {}
+      for(let i = 0;i<allVideos.length;i+=Math.max(1, Math.ceil(allVideos.length / 15))){
+        let next = Math.min(allVideos.length, i + Math.max(1, Math.ceil(allVideos.length / 15)));
         let video = allVideos[i];
-        data1.push(video.sentimentData.documentSentiment.score);
+
+
+        let subArray = allVideos.slice(i, next).map(vid => vid.sentimentData.documentSentiment.score)
+        let averageScore = subArray.reduce((a, b) => a+b, 0) / (next - i)
+        data1.push(averageScore);
+
+        videoMapping[i] = next;
+
         x_labels.push(video.date.toLocaleString("en-US"));
       }
 
@@ -72,9 +80,18 @@ function populateAllVideos(){
         axis: {
           x: {
             type: 'category',
-            categories: x_labels
+            categories: x_labels,
+            label: 'X Label'
+
+          },
+          y: {
+            label: 'Y Label'
+          
           }
         },
+        legend: {
+          show: false
+        }
       });
     }
   });
