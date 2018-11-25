@@ -2,8 +2,14 @@ let allVideos = [];
 let filteredVideos = [];
 let videoMapping = {};
 
+var refreshTimer = window.setInterval(populateAllVideos, 15000 );
+
+function resetRefreshTimer(){
+  refreshTimer = window.setInterval(populateAllVideos, 15000 );
+}
+
 function clickGraph(data){
-  debugger;
+  clearInterval(refreshTimer);
   filteredVideos = [];
 
   for (var i = data.index; i < Math.min(allVideos.length, videoMapping[data.index]);i++){
@@ -86,7 +92,7 @@ function populateAllVideos(){
           },
           y: {
             label: 'Y Label'
-          
+
           }
         },
         legend: {
