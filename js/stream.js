@@ -7,7 +7,7 @@ let useAlt = true; //True = use old
   function startStream(){
     //Set up the references to the doms
     // newVideo = oldVideo.clone();
-    // $("#addVideos").prepend(newVideo);=-{[[=-]'p:]}
+    // $("#addVideos").prepend(newVideo);=-{[[=-]'p:]}  
 
     parseAllVideos(setupVideo);
   }
