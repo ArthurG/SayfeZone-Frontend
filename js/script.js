@@ -107,6 +107,10 @@ function populateAllVideos(){
 
       var chart = c3.generate({
         bindto: '#chart',
+        size: {
+          height: 100,
+          width: 500,
+        },
         data: {
           columns: [
             data1
@@ -117,12 +121,7 @@ function populateAllVideos(){
           x: {
             type: 'category',
             categories: x_labels,
-            label: 'Date'
-
-          },
-          y: {
-            label: 'Sentiment Value'
-
+            show: false
           }
         },
         legend: {
